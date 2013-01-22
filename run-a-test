@@ -1,0 +1,58 @@
+#!perl
+use 5.12.0;;
+use File::Find::Rule;
+use File::Next;
+use Path::Class::Rule;
+use Path::Iterator::Rule;
+
+use Getopt::Long::Descriptive;
+
+my ($opt, $usage) = describe_options(
+  '%c %o',
+  [ 'class|C=s',    'which class to test', { required => 1 } ],
+  [ 'maxfiles|x=i', 'fetch this many files and stop', { default => 200_000 } ],
+  [ 'options|o=s',  'options to pass to finder, given as perl to eval' ],
+);
+
+my $root  = '.';
+my $max   = $opt->maxfiles;
+my $opt   = {};
+
+if ($opt->options) {
+  $opt = eval $opt->options;
+}
+
+if ($opt->class eq 'FFR') {
+  my $iter  = File::Find::Rule->options($opt)->start($root);
+
+  while (defined ( my $file = $iter->match )) {
+    next unless $::i++ > $max;
+    say $file;
+    last;
+  }
+} elsif ($opt->class eq 'PCR') {
+  my $iter  = Path::Class::Rule->new->iter($root, $opt);
+
+  while (defined ( my $file = $iter->() )) {
+    next unless $::i++ > $max;
+    say $file;
+    last;
+  }
+} elsif ($opt->class eq 'PIR') {
+  my $iter  = Path::Iterator::Rule->new->iter($root, $opt);
+
+  while (defined ( my $file = $iter->() )) {
+    next unless $::i++ > $max;
+    say $file;
+    last;
+  }
+} elsif ($opt->class eq 'FN') {
+  my $iter = File::Next::everything({}, $root);
+  while (defined ( my $file = $iter->() )) {
+    next unless $::i++ > $max;
+    say $file;
+    last;
+  }
+} else {
+  die "unknown class"
+}

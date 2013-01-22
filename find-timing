@@ -1,0 +1,62 @@
+
+FILE 500K
+
+  perl foo FFR  19.54s user 35.10s system 74% cpu 1:13.55 total
+  perl foo FFR  19.63s user 35.34s system 73% cpu 1:14.58 total
+  perl foo FFR  19.41s user 35.11s system 73% cpu 1:13.91 total
+  perl foo FFR  20.11s user 36.07s system 72% cpu 1:17.60 total
+  perl foo FFR  19.49s user 35.53s system 70% cpu 1:18.08 total
+  perl foo FFR  19.68s user 35.18s system 73% cpu 1:14.60 total
+  perl foo FFR  18.53s user 33.58s system 72% cpu 1:11.88 total
+
+  perl foo PCR  206.16s user 51.96s system 88% cpu 4:52.44 total
+  perl foo PCR  199.57s user 51.62s system 87% cpu 4:45.49 total
+  perl foo PCR  201.29s user 50.79s system 87% cpu 4:47.68 total
+  perl foo PCR  201.73s user 51.37s system 88% cpu 4:47.42 total
+  perl foo PCR  200.69s user 51.55s system 87% cpu 4:47.70 total
+  perl foo PCR  193.53s user 49.71s system 87% cpu 4:37.97 total
+  perl foo PCR  193.53s user 49.50s system 87% cpu 4:38.86 total
+  perl foo PCR  192.00s user 49.58s system 87% cpu 4:35.94 total
+  perl foo PCR  199.32s user 50.81s system 87% cpu 4:46.45 total
+  perl foo PCR  203.61s user 51.42s system 88% cpu 4:48.03 total
+
+  perl foo PIR  20.65s user 26.95s system 60% cpu 1:19.31 total
+  perl foo PIR  21.10s user 26.95s system 63% cpu 1:15.56 total
+  perl foo PIR  20.51s user 26.41s system 62% cpu 1:14.58 total
+  perl foo PIR  21.07s user 26.75s system 63% cpu 1:15.53 total
+  perl foo PIR  21.18s user 27.21s system 60% cpu 1:20.17 total
+  perl foo PIR  20.55s user 26.41s system 62% cpu 1:15.22 total
+  perl foo PIR  20.85s user 26.48s system 62% cpu 1:15.26 total
+  perl foo PIR  20.86s user 26.57s system 63% cpu 1:14.89 total
+  perl foo PIR  21.57s user 27.62s system 60% cpu 1:20.89 total
+  perl foo PIR  20.52s user 26.36s system 62% cpu 1:14.57 total
+
+FILE 200K
+
+  perl foo FFR  18.81s user 34.93s system 68% cpu 1:18.32 total
+  perl foo FFR  18.36s user 33.99s system 72% cpu 1:12.40 total
+  perl foo FFR  18.09s user 33.63s system 72% cpu 1:10.92 total
+  perl foo FFR  17.94s user 33.42s system 72% cpu 1:10.68 total
+  perl foo FFR  18.31s user 33.76s system 72% cpu 1:11.62 total
+  perl foo FFR  18.59s user 34.88s system 68% cpu 1:17.86 total
+  perl foo FFR  18.20s user 33.81s system 71% cpu 1:12.27 total
+  perl foo FFR  15.36s user 29.43s system 71% cpu 1:02.31 total
+
+  perl foo PIR  7.78s user 9.01s system 65% cpu 25.710 total
+  perl foo PIR  7.72s user 9.76s system 65% cpu 26.594 total
+  perl foo PIR  7.93s user 9.90s system 67% cpu 26.610 total
+  perl foo PIR  7.99s user 9.93s system 66% cpu 26.961 total
+  perl foo PIR  7.77s user 9.86s system 64% cpu 27.185 total
+  perl foo PIR  7.80s user 9.79s system 66% cpu 26.622 total
+  perl foo PIR  7.85s user 9.95s system 66% cpu 26.973 total
+  perl foo PIR  7.72s user 9.84s system 65% cpu 26.619 total
+  perl foo PIR  7.89s user 9.86s system 67% cpu 26.455 total
+  perl foo PIR  7.88s user 9.85s system 66% cpu 26.765 total
+
+  perl foo PCR  101.65s user 22.83s system 90% cpu 2:18.27 total
+  perl foo PCR  98.29s user 21.77s system 91% cpu 2:11.06 total
+  perl foo PCR  98.76s user 22.02s system 90% cpu 2:13.39 total
+  perl foo PCR  101.33s user 22.77s system 91% cpu 2:16.32 total
+  perl foo PCR  98.25s user 21.50s system 91% cpu 2:10.92 total
+  perl foo PCR  96.58s user 21.48s system 91% cpu 2:09.59 total
+
