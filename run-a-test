@@ -60,5 +60,10 @@ if ($opt->class eq 'FFR') {
 }
 
 my $after = time;
+my $taken = $after - $before;
 
-printf "Total wallclock seconds: %0.4f\n", $after - $before;
+my $h = int(  $taken         / 3600 );
+my $m = int( ($taken % 3600) /   60 );
+my $s = $taken - $h * 3600 - $m * 60;
+
+printf "Total wallclock seconds: %02u:%02u:%05.2f\n", $h, $m, $s;
