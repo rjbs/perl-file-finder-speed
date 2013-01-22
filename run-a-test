@@ -1,11 +1,11 @@
-#!perl
+#!/usr/bin/env perl
 use 5.12.0;;
 use File::Find::Rule;
 use File::Next;
+use Getopt::Long::Descriptive;
 use Path::Class::Rule;
 use Path::Iterator::Rule;
-
-use Getopt::Long::Descriptive;
+use Time::HiRes 'time';
 
 my ($opt, $usage) = describe_options(
   '%c %o',
@@ -16,14 +16,16 @@ my ($opt, $usage) = describe_options(
 
 my $root  = '.';
 my $max   = $opt->maxfiles;
-my $opt   = {};
+my $fopt  = {};
 
 if ($opt->options) {
-  $opt = eval $opt->options;
+  $fopt= eval $opt->options;
 }
 
+my $before = time;
+
 if ($opt->class eq 'FFR') {
-  my $iter  = File::Find::Rule->options($opt)->start($root);
+  my $iter  = File::Find::Rule->extras($fopt)->start($root);
 
   while (defined ( my $file = $iter->match )) {
     next unless $::i++ > $max;
@@ -31,7 +33,7 @@ if ($opt->class eq 'FFR') {
     last;
   }
 } elsif ($opt->class eq 'PCR') {
-  my $iter  = Path::Class::Rule->new->iter($root, $opt);
+  my $iter  = Path::Class::Rule->new->iter($root, $fopt);
 
   while (defined ( my $file = $iter->() )) {
     next unless $::i++ > $max;
@@ -39,7 +41,7 @@ if ($opt->class eq 'FFR') {
     last;
   }
 } elsif ($opt->class eq 'PIR') {
-  my $iter  = Path::Iterator::Rule->new->iter($root, $opt);
+  my $iter  = Path::Iterator::Rule->new->iter($root, $fopt);
 
   while (defined ( my $file = $iter->() )) {
     next unless $::i++ > $max;
@@ -47,7 +49,7 @@ if ($opt->class eq 'FFR') {
     last;
   }
 } elsif ($opt->class eq 'FN') {
-  my $iter = File::Next::everything({}, $root);
+  my $iter = File::Next::everything($fopt, $root);
   while (defined ( my $file = $iter->() )) {
     next unless $::i++ > $max;
     say $file;
@@ -56,3 +58,7 @@ if ($opt->class eq 'FFR') {
 } else {
   die "unknown class"
 }
+
+my $after = time;
+
+printf "Total wallclock seconds: %0.4f\n", $after - $before;
