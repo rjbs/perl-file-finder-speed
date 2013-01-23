@@ -9,55 +9,59 @@ use Chart::Clicker::Data::Series;
 use Geometry::Primitive::Rectangle;
 use Graphics::Color::RGB;
 use Geometry::Primitive::Circle;
+use List::AllUtils qw(max sum);
 
 my $cc = Chart::Clicker->new(width => 640, height => 300, format => 'png');
 
-my @files = qw(1 2 3 4 5 5.2);
+my @files = qw(0 1 2 3 4 5 6);
 
 sub sec {
-  return [ map {; my ($m, $s) = split /:/, $_; $m * 60 + $s; } @_ ]
+  return map {; my ($m, $s) = split /:/, $_; $m * 60 + $s; } @_
 }
 
-my %result = (
-  FN  => sec(qw(00:00.010 00:00.090 00:00.990 00:07.410 01:21.150 03:46.100)),
-  PIR => sec(qw(00:00.090 00:00.600 00:01.540 00:16.360 03:06.080 06:29.440)),
-  PCR => sec(qw(00:02.140 00:15.340 00:26.360 02:44.000 07:59.890 13:18.390)),
-  FF  => sec(qw(00:00.000 00:00.020 00:00.660 00:06.560 01:31.310 03:36.170)),
-  FFR => sec(qw(04:12.320 04:17.790 04:08.060 04:11.660 03:45.530 04:12.840)),
+my %name_for = (
+  FN   => 'File::Next',
+  PIR  => 'Path::Iterator::Rule',
+  PCR  => 'Path::Class::Rule',
+  FF   => 'File::Find',
+  FFR  => 'File::Find::Rule',
+  FFO  => 'File::Find::Object',
+  FFI  => 'File::Find::Iterator',
 );
 
-my $series0 = Chart::Clicker::Data::Series->new(
-  name    => 'File::Find',
-  keys    => \@files,
-  values  => $result{FF},
-);
+my %finding;
 
-my $series1 = Chart::Clicker::Data::Series->new(
-  name    => 'File::Next',
-  keys    => \@files,
-  values  => $result{FN},
-);
+{
+  my $results_fn = $ARGV[0] || 'results.txt';
+  open my $fh, '<', $results_fn or die "can't read $results_fn: $!";
 
-my $series2 = Chart::Clicker::Data::Series->new(
-  name    => 'Path::Class::Rule',
-  keys    => \@files,
-  values  => $result{PCR},
-);
+  my %result;
 
-my $series3 = Chart::Clicker::Data::Series->new(
-  name    => 'Path::Iterator::Rule',
-  keys    => \@files,
-  values  => $result{PIR},
-);
+  while (my $line = <$fh>) {
+    my ($t, $c, $x) = split /\s*-\s*/, $line;
 
-my $series4 = Chart::Clicker::Data::Series->new(
-  name    => 'File::Find::Rule',
-  keys    => \@files,
-  values  => $result{FFR},
-);
+    $result{ $c }{ $x } ||= [];
+    push @{ $result{ $c }{ $x } }, sec($t);
+  }
+
+  for my $c (keys %result) {
+    for my $x (sort keys %{ $result{$c} }) {
+      my @measurements = @{ $result{$c}{$x} };
+      my $avg = sum(@measurements) / @measurements;
+      push @{ $finding{$c} }, $avg;
+    }
+  }
+}
+
+my @series;
+my $CCDS = 'Chart::Clicker::Data::Series';
+push @series, map {; $CCDS->new( keys => \@files, %$_ ) }
+              map {; { name => $name_for{$_}, values => $finding{$_} } }
+              grep { $finding{$_} && @files == @{ $finding{$_} } }
+              qw( FF FN PCR PIR FFR FFO FFI );
 
 my $ds = Chart::Clicker::Data::DataSet->new(
-  series => [ $series0, $series1, $series2, $series3, $series4 ]
+  series => \@series,
 );
 
 $cc->title->text('Finder Slowness');
@@ -75,12 +79,9 @@ $defctx->range_axis->format(sub {
 
 $defctx->domain_axis->label('Stop after n files');
 $defctx->domain_axis->tick_values([ 1 .. 6 ]);
-$defctx->domain_axis->format(sub { $_[0] < 6 ? "5e$_[0]" : "6e5" });
+$defctx->domain_axis->format(sub { "1e$_[0]" });
 
 $defctx->renderer->brush->width(2);
-
-# $cc->legend->font->size(15);
-# $cc->legend->font->family('Arno Pro');
 
 $cc->write_output('line.png');
 

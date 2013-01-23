@@ -1,6 +1,8 @@
 #!/usr/bin/env perl
 use 5.12.0;;
 use File::Find;
+use File::Find::Iterator;
+use File::Find::Object;
 use File::Find::Rule;
 use File::Next;
 use Getopt::Long::Descriptive;
@@ -30,6 +32,22 @@ if ($opt->class eq 'FFR') {
   my $iter  = File::Find::Rule->extras($fopt)->start($root);
 
   while (defined ( my $file = $iter->match )) {
+    next unless $::i++ > $max;
+    say $file if $opt->name;
+    last;
+  }
+} elsif ($opt->class eq 'FFI') {
+  my $iter  = File::Find::Iterator->create(dir => [ $root ], %$fopt);
+
+  while (defined ( my $file = $iter->next )) {
+    next unless $::i++ > $max;
+    say $file if $opt->name;
+    last;
+  }
+} elsif ($opt->class eq 'FFO') {
+  my $iter  = File::Find::Object->new($fopt, $root);
+
+  while (defined ( my $file = $iter->next )) {
     next unless $::i++ > $max;
     say $file if $opt->name;
     last;
@@ -74,12 +92,11 @@ if ($opt->class eq 'FFR') {
 my $after = time;
 my $taken = $after - $before;
 
-my $h = int(  $taken         / 3600 );
-my $m = int( ($taken % 3600) /   60 );
-my $s = $taken - $h * 3600 - $m * 60;
+my $m = int( $taken / 60 );
+my $s = $taken - $m * 60;
 
-printf "%02u:%02u:%05.2f - %3s - %6u - %s\n",
-  $h, $m, $s,
+printf "%02u:%06.3f - %3s - %6u - %s\n",
+  $m, $s,
   $opt->class,
   $opt->maxfiles,
   $opt->options // '{}',
