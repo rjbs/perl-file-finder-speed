@@ -1,5 +1,6 @@
 #!/usr/bin/env perl
 use 5.12.0;;
+use File::Find;
 use File::Find::Rule;
 use File::Next;
 use Getopt::Long::Descriptive;
@@ -56,6 +57,16 @@ if ($opt->class eq 'FFR') {
     say $file if $opt->name;
     last;
   }
+} elsif ($opt->class eq 'FF') {
+  finddepth(
+    sub {
+      return unless $::i++ > $max;
+      say $_ if $opt->name;
+      goto DONE;
+    },
+    $root,
+  );
+  DONE: { 1 };
 } else {
   die "unknown class"
 }
