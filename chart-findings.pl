@@ -52,7 +52,7 @@ my $ds = Chart::Clicker::Data::DataSet->new(
   series => [ $series1, $series2, $series3, $series4 ]
 );
 
-$cc->title->text('Finder Speed');
+$cc->title->text('Finder Slowness');
 $cc->title->padding->bottom(5);
 $cc->add_to_datasets($ds);
 
