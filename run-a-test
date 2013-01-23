@@ -66,4 +66,8 @@ my $h = int(  $taken         / 3600 );
 my $m = int( ($taken % 3600) /   60 );
 my $s = $taken - $h * 3600 - $m * 60;
 
-printf "Total wallclock seconds: %02u:%02u:%05.2f\n", $h, $m, $s;
+printf "%02u:%02u:%05.2f - %3s - %6u - %s\n",
+  $h, $m, $s,
+  $opt->class,
+  $opt->maxfiles,
+  $opt->options // '{}',
