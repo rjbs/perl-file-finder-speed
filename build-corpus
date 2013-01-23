@@ -2,18 +2,27 @@
 use 5.12.0;
 use Digest::MD5 qw(md5_hex);
 use File::Path qw(make_path);
+use Getopt::Long::Descriptive;
 
-warn "corpus already exists\n" if -d 'corpus';
-make_path('corpus');
+my ($opt, $usage) = describe_options(
+  '%c %o [filecount]',
+  [ 'target=s', 'name in which to build', { default => 'corpus' } ],
+  [ 'depth=i',  'how many dirs deep are files? default: 3', { default => 3 } ],
+);
 
-my $max = $ARGV[0] || die "usage: build-corpus <FILECOUNT>\n";
+warn "corpus already exists\n" if -d $opt->target;
+make_path($opt->target);
+
+my $max = $ARGV[0] || $usage->die;
 
 my %files;
 for (1 .. $max) {
   say;
   my $fn = md5_hex($_);
-  my ($a, $b, $c, $leaf) = $fn =~ /\A(..)(..)(..)(.+)\z/;
-  make_path("corpus/$a/$b/$c");
-  open my $fh, '>', "corpus/$a/$b/$c/$leaf" or die "can't open it: $!";
+  my @dir;
+  push @dir, substr $fn, 0, 2, '' until @dir == $opt->depth;
+  my $target = join q{/}, $opt->target, @dir;
+  make_path($target);
+  open my $fh, '>', "$target/$fn" or die "can't open it: $!";
 }
 
