@@ -95,7 +95,7 @@ my $taken = $after - $before;
 my $m = int( $taken / 60 );
 my $s = $taken - $m * 60;
 
-printf "%02u:%06.3f - %3s - %6u - %s\n",
+printf "%02u:%06.3f - %3s - %7u - %s\n",
   $m, $s,
   $opt->class,
   $opt->maxfiles,
