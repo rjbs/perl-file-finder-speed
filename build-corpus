@@ -10,6 +10,7 @@ my $max = $ARGV[0] || die "usage: build-corpus <FILECOUNT>\n";
 
 my %files;
 for (1 .. $max) {
+  say;
   my $fn = md5_hex($_);
   my ($a, $b, $c, $leaf) = $fn =~ /\A(..)(..)(..)(.+)\z/;
   make_path("corpus/$a/$b/$c");
