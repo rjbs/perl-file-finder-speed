@@ -11,7 +11,7 @@ use Graphics::Color::RGB;
 use Geometry::Primitive::Circle;
 use List::AllUtils qw(max sum);
 
-my $cc = Chart::Clicker->new(width => 720, height => 300, format => 'png');
+my $cc = Chart::Clicker->new(width => 800, height => 300, format => 'png');
 
 my @files = qw(0 1 2 3 4 5 6);
 
@@ -27,6 +27,7 @@ my %name_for = (
   FFR  => 'File::Find::Rule',
   FFO  => 'File::Find::Object',
   FFI  => 'File::Find::Iterator',
+  gfind  => 'GNU find',
 );
 
 my %finding;
@@ -38,6 +39,7 @@ my %finding;
   my %result;
 
   while (my $line = <$fh>) {
+    next if /^#/;
     my ($t, $c, $x) = split /\s*-\s*/, $line;
 
     $result{ $c }{ $x } ||= [];
@@ -58,7 +60,7 @@ my $CCDS = 'Chart::Clicker::Data::Series';
 push @series, map {; $CCDS->new( keys => \@files, %$_ ) }
               map {; { name => $name_for{$_}, values => $finding{$_} } }
               grep { $finding{$_} && @files == @{ $finding{$_} } }
-              qw( FF FN PCR PIR FFR FFO FFI );
+              qw( FF FN PCR PIR FFR FFO FFI gfind );
 
 my $ds = Chart::Clicker::Data::DataSet->new(
   series => \@series,

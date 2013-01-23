@@ -75,6 +75,8 @@ if ($opt->class eq 'FFR') {
     say $file if $opt->name;
     last;
   }
+} elsif ($opt->class eq 'gfind') {
+  my $file = `find $root -type f | head -$max`;
 } elsif ($opt->class eq 'FF') {
   finddepth(
     sub {
