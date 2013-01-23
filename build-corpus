@@ -7,7 +7,7 @@ use Getopt::Long::Descriptive;
 my ($opt, $usage) = describe_options(
   '%c %o [filecount]',
   [ 'target=s', 'name in which to build', { default => 'corpus' } ],
-  [ 'depth=i',  'how many dirs deep are files? default: 3', { default => 3 } ],
+  [ 'splits=s',  'how to split up file; comma-lengths', { default => '3,3,3' } ],
 );
 
 warn "corpus already exists\n" if -d $opt->target;
@@ -19,8 +19,12 @@ my %files;
 for (1 .. $max) {
   say;
   my $fn = md5_hex($_);
+
   my @dir;
-  push @dir, substr $fn, 0, 2, '' until @dir == $opt->depth;
+  for my $len (split m{\s*,\s*}, $opt->splits) {
+    push @dir, substr $fn, 0, $len, '';
+  }
+
   my $target = join q{/}, $opt->target, @dir;
   make_path($target);
   open my $fh, '>', "$target/$fn" or die "can't open it: $!";
