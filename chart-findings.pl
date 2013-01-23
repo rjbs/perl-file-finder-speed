@@ -11,7 +11,7 @@ use Graphics::Color::RGB;
 use Geometry::Primitive::Circle;
 use List::AllUtils qw(max sum);
 
-my $cc = Chart::Clicker->new(width => 640, height => 300, format => 'png');
+my $cc = Chart::Clicker->new(width => 720, height => 300, format => 'png');
 
 my @files = qw(0 1 2 3 4 5 6);
 
