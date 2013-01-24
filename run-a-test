@@ -7,7 +7,7 @@ use File::Find::Rule;
 use File::Next;
 use Getopt::Long::Descriptive;
 use Path::Class::Rule;
-use Path::Iterator::Rule;
+use Path::Iterator::Rule 0.005; # iter_fast
 use Time::HiRes 'time';
 
 my ($opt, $usage) = describe_options(
@@ -61,7 +61,7 @@ if ($opt->class eq 'FFR') {
     last;
   }
 } elsif ($opt->class eq 'PIR') {
-  my $iter  = Path::Iterator::Rule->new->iter($root, $fopt);
+  my $iter  = Path::Iterator::Rule->new->iter_fast($root, $fopt);
 
   while (defined ( my $file = $iter->() )) {
     next unless $::i++ > $max;
