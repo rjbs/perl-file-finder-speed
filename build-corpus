@@ -7,7 +7,7 @@ use Getopt::Long::Descriptive;
 my ($opt, $usage) = describe_options(
   '%c %o [filecount]',
   [ 'target=s', 'name in which to build', { default => 'corpus' } ],
-  [ 'splits=s',  'how to split up file; comma-lengths', { default => '3,3,3' } ],
+  [ 'splits=s',  'how to split up file; comma-lengths', { default => '2,2,2' } ],
 );
 
 warn "corpus already exists\n" if -d $opt->target;

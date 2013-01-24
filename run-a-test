@@ -16,9 +16,10 @@ my ($opt, $usage) = describe_options(
   [ 'maxfiles|x=i', 'fetch this many files and stop', { default => 200_000 } ],
   [ 'options|o=s',  'options to pass to finder, given as perl to eval' ],
   [ 'name!',        'print filename when done' ],
+  [ 'root=s',       'root', { default => '.' } ],
 );
 
-my $root  = '.';
+my $root  = $opt->root;
 my $max   = $opt->maxfiles;
 my $fopt  = {};
 
