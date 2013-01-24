@@ -7,7 +7,7 @@ use File::Find::Rule;
 use File::Next;
 use Getopt::Long::Descriptive;
 use Path::Class::Rule;
-use Path::Iterator::Rule;
+use Path::Iterator::Rule 0.005; # iter_fast
 use Time::HiRes 'time';
 
 my ($opt, $usage) = describe_options(
@@ -15,10 +15,11 @@ my ($opt, $usage) = describe_options(
   [ 'class|C=s',    'which class to test', { required => 1 } ],
   [ 'maxfiles|x=i', 'fetch this many files and stop', { default => 200_000 } ],
   [ 'options|o=s',  'options to pass to finder, given as perl to eval' ],
+  [ 'root|r=s',     'directory to search within', {default => "corpus" } ],
   [ 'name!',        'print filename when done' ],
 );
 
-my $root  = '.';
+my $root  = $opt->root;
 my $max   = $opt->maxfiles;
 my $fopt  = {};
 
@@ -61,7 +62,7 @@ if ($opt->class eq 'FFR') {
     last;
   }
 } elsif ($opt->class eq 'PIR') {
-  my $iter  = Path::Iterator::Rule->new->iter($root, $fopt);
+  my $iter  = Path::Iterator::Rule->new->iter_fast($root, $fopt);
 
   while (defined ( my $file = $iter->() )) {
     next unless $::i++ > $max;
